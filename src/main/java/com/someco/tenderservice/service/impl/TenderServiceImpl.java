@@ -1,6 +1,7 @@
 package com.someco.tenderservice.service.impl;
 
 import com.someco.tenderservice.api.request.CreateTenderRequest;
+import com.someco.tenderservice.api.response.AcceptOfferResponse;
 import com.someco.tenderservice.constant.CommonConstants;
 import com.someco.tenderservice.dao.CompanyDAO;
 import com.someco.tenderservice.dao.OfferDAO;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +33,9 @@ public class TenderServiceImpl implements TenderService {
 
     @Autowired
     private OfferDAO offerDAO;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public Tender createTender(CreateTenderRequest createTenderRequest) throws Exception {
@@ -61,18 +67,27 @@ public class TenderServiceImpl implements TenderService {
 
     @Override
     @Transactional
-    public void acceptOffer(Tender tender, List<Offer> pendingOffers, Long offerID) throws Exception {
+    public AcceptOfferResponse acceptOffer(Tender tender, List<Offer> pendingOffers, Long offerID) throws Exception {
         Optional<Offer> offerForAccepting = pendingOffers.stream().filter(offer ->
                 offer.getOfferID().equals(offerID)).findFirst();
         if (!offerForAccepting.isPresent()) {
             throw new Exception("Invalid offerID");
         }
-        offerDAO.save(offerForAccepting.get());
+        Offer offer = offerForAccepting.get();
+        offer.setOfferStatus(CommonConstants.OFFER_ACCEPTED);
+        offerDAO.save(offer);
 
         offerDAO.setPendingOffersAsRejected(tender.getTenderID());
 
         tender.setTenderStatus(CommonConstants.TENDER_STATUS_COMPLETED);
         tenderDAO.save(tender);
+
+        AcceptOfferResponse acceptOfferResponse = new AcceptOfferResponse();
+        com.someco.tenderservice.dto.Tender tenderDTO = new com.someco.tenderservice.dto.Tender(tender);
+        tenderDTO.addOffer(new com.someco.tenderservice.dto.Offer(offer));
+        acceptOfferResponse.setTender(tenderDTO);
+
+        return acceptOfferResponse;
     }
 
 }

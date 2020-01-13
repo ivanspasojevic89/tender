@@ -1,7 +1,7 @@
 package com.someco.tenderservice.api.response;
 
-import com.someco.tenderservice.model.Offer;
-import com.someco.tenderservice.model.Tender;
+import com.someco.tenderservice.dto.Offer;
+import com.someco.tenderservice.dto.Tender;
 import lombok.Data;
 
 import java.util.List;

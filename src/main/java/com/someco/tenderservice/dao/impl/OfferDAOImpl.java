@@ -36,10 +36,10 @@ public class OfferDAOImpl implements OfferDAOFacade {
     private List<Predicate> getPredicateList(GetOffersRequest getOffersRequest, CriteriaBuilder criteriaBuilder, Root<Offer> root) {
         List<Predicate> predicateList = new ArrayList<>();
         if (getOffersRequest.getCompanyID() != null) {
-            predicateList.add(criteriaBuilder.equal(root.get("companyID"), getOffersRequest.getCompanyID()));
+            predicateList.add(criteriaBuilder.equal(root.get("company"), getOffersRequest.getCompanyID()));
         }
         if (getOffersRequest.getTenderID() != null) {
-            predicateList.add(criteriaBuilder.equal(root.get("tenderID"), getOffersRequest.getTenderID()));
+            predicateList.add(criteriaBuilder.equal(root.get("tender"), getOffersRequest.getTenderID()));
         }
         return predicateList;
     }

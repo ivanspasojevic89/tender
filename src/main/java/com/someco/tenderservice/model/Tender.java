@@ -1,10 +1,10 @@
 package com.someco.tenderservice.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -32,6 +32,7 @@ public class Tender {
 
     @Column(name = "TenderCreated")
     @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private Date tenderCreated;
 
     @Column(name = "TenderCompleted")
@@ -39,10 +40,7 @@ public class Tender {
 
     @ManyToOne
     @JoinColumn(name = "TenderCompanyID", nullable = false)
-    @JsonProperty
     private Company company;
 
-   /* @OneToMany
-    private List<Offer> offers;*/
 
 }

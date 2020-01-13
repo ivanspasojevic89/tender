@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,8 +57,11 @@ public class TenderController {
                 return getTenderInfoResponse;
             }
             List<Offer> offers = offerService.findByTenderID(tenderID);
-            getTenderInfoResponse.setTender(tender.get());
-            getTenderInfoResponse.setOffers(offers);
+            com.someco.tenderservice.dto.Tender tenderDTO = new com.someco.tenderservice.dto.Tender(tender.get());
+            offers.forEach(offer -> {
+                tenderDTO.addOffer(new com.someco.tenderservice.dto.Offer(offer));
+            });
+            getTenderInfoResponse.setTender(tenderDTO);
         } catch (Exception ex) {
             log.error(ex.getMessage());
             getTenderInfoResponse.setResultCode(CommonConstants.UNEXPECTED_ERROR);
@@ -71,7 +75,11 @@ public class TenderController {
     public GetTenderListResponse getTenders(@RequestParam Long companyID) {
         GetTenderListResponse getTenderListResponse = new GetTenderListResponse();
         List<Tender> tenders = tenderService.findByCompanyID(companyID);
-        getTenderListResponse.setTenders(tenders);
+        List<com.someco.tenderservice.dto.Tender> tendersDTO = new LinkedList<>();
+        tenders.forEach(tender -> {
+            tendersDTO.add(new com.someco.tenderservice.dto.Tender(tender));
+        });
+        getTenderListResponse.setTenders(tendersDTO);
         return getTenderListResponse;
 
     }
@@ -94,10 +102,7 @@ public class TenderController {
                 return acceptOfferResponse;
             }
 
-            tenderService.acceptOffer(tender.get(), pendingOffers, acceptOfferRequest.getOfferID());
-            acceptOfferResponse.setOffers(pendingOffers);
-            acceptOfferResponse.setTender(tender.get());
-
+            acceptOfferResponse = tenderService.acceptOffer(tender.get(), pendingOffers, acceptOfferRequest.getOfferID());
 
         } catch (Exception ex) {
             log.error(ex.getMessage());

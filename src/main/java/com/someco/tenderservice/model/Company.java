@@ -1,6 +1,7 @@
 package com.someco.tenderservice.model;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,6 +26,7 @@ public class Company {
 
     @Column(name = "CompanyCreated")
     @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private Date companyCreated;
 
 

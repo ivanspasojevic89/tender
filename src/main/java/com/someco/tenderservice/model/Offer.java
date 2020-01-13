@@ -1,10 +1,13 @@
 package com.someco.tenderservice.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -30,19 +33,20 @@ public class Offer {
 
     @Column(name = "OfferCreated")
     @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private Date offerCreated;
 
     @Column(name = "OfferModified")
     private Date offerModified;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OfferTenderID", nullable = false)
-    @JsonProperty
+    @Fetch(FetchMode.SELECT)
     private Tender tender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "OfferCompanyID", nullable = false)
-    @JsonProperty
+    @Fetch(FetchMode.JOIN)
     private Company company;
 
 

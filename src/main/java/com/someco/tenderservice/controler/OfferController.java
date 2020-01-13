@@ -6,6 +6,7 @@ import com.someco.tenderservice.api.request.GetOffersRequest;
 import com.someco.tenderservice.api.response.CreateOfferResponse;
 import com.someco.tenderservice.api.response.GetOffersResponse;
 import com.someco.tenderservice.constant.CommonConstants;
+import com.someco.tenderservice.dto.Tender;
 import com.someco.tenderservice.model.Offer;
 import com.someco.tenderservice.service.OfferService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -51,7 +53,13 @@ public class OfferController {
                 return getOffersResponse;
             }
             List<Offer> offers = offerService.findBy(getOffersRequest);
-            getOffersResponse.setOffers(offers);
+            List<com.someco.tenderservice.dto.Offer> offersDTO = new LinkedList<>();
+            offers.forEach(offer -> {
+                com.someco.tenderservice.dto.Offer offerDTO = new com.someco.tenderservice.dto.Offer(offer);
+                offerDTO.setTender(new Tender(offer.getTender()));
+                offersDTO.add(offerDTO);
+            });
+            getOffersResponse.setOffers(offersDTO);
 
         } catch (Exception ex) {
             log.error(ex.getMessage());

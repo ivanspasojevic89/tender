@@ -1,6 +1,7 @@
 package com.someco.tenderservice.service;
 
 import com.someco.tenderservice.api.request.CreateTenderRequest;
+import com.someco.tenderservice.api.response.AcceptOfferResponse;
 import com.someco.tenderservice.model.Offer;
 import com.someco.tenderservice.model.Tender;
 
@@ -14,5 +15,5 @@ public interface TenderService {
 
     List<Tender> findByCompanyID(Long companyID);
 
-    void acceptOffer(Tender tender, List<Offer> pendingOffers, Long offerID) throws Exception;
+    AcceptOfferResponse acceptOffer(Tender tender, List<Offer> pendingOffers, Long offerID) throws Exception;
 }

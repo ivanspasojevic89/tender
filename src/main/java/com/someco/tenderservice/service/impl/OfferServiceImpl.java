@@ -70,6 +70,6 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<Offer> findBy(GetOffersRequest getOffersRequest) {
-        return null;
+        return offerDAO.findOfferByCriteria(getOffersRequest);
     }
 }
