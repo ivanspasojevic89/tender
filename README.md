@@ -15,4 +15,4 @@
     - Run tests (TenderServiceApplicationTest) for initial population of company, tender and offer data
     
  - Api documentation (swagger auto-generated): http://localhost:8080/v2/api-docs
- - Database structure: tender-service/tender.png
+ - Database model: tender-service/tender.png
