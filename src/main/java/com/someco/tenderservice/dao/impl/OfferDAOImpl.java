@@ -26,7 +26,7 @@ public class OfferDAOImpl implements OfferDAOFacade {
         Root<Offer> root = criteriaQuery.from(Offer.class);
 
         List<Predicate> predicateList = getPredicateList(getOffersRequest, criteriaBuilder, root);
-        criteriaQuery.where(predicateList.toArray(new Predicate[predicateList.size()]));
+        criteriaQuery.where(predicateList.toArray(new Predicate[0]));
 
         TypedQuery<Offer> typedQuery = entityManager.createQuery(criteriaQuery);
 
